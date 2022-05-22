@@ -1,5 +1,5 @@
 #AWS VPC Resource
-resource "aws_vpc" "levelup_vpc" {
+resource "aws_vpc" "kalifax_vpc" {
   cidr_block            = var.cidr_vpc
   enable_dns_support    = true
   enable_dns_hostnames  = true
@@ -10,8 +10,8 @@ resource "aws_vpc" "levelup_vpc" {
 }
 
 #AWS Internet Gateway
-resource "aws_internet_gateway" "levelup_igw" {
-  vpc_id        = aws_vpc.levelup_vpc.id
+resource "aws_internet_gateway" "kalifax_igw" {
+  vpc_id        = aws_vpc.kalifax_vpc.id
   
   tags = {
     Environment = var.environment_tag
@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "levelup_igw" {
 
 # AWS Subnet for VPC
 resource "aws_subnet" "subnet_public" {
-  vpc_id                    = aws_vpc.levelup_vpc.id
+  vpc_id                    = aws_vpc.kalifax_vpc.id
   cidr_block                = var.cidr_subnet
   map_public_ip_on_launch   = "true"
   availability_zone         = var.availability_zone
@@ -31,12 +31,12 @@ resource "aws_subnet" "subnet_public" {
 }
 
 # AWS Route Table
-resource "aws_route_table" "levelup_rtb_public" {
-  vpc_id            = aws_vpc.levelup_vpc.id
+resource "aws_route_table" "kalifax_rtb_public" {
+  vpc_id            = aws_vpc.kalifax_vpc.id
 
   route {
       cidr_block    = "0.0.0.0/0"
-      gateway_id    = aws_internet_gateway.levelup_igw.id
+      gateway_id    = aws_internet_gateway.kalifax_igw.id
   }
 
   tags = {
@@ -45,15 +45,15 @@ resource "aws_route_table" "levelup_rtb_public" {
 }
 
 # AWS Route Association 
-resource "aws_route_table_association" "levelup_rta_subnet_public" {
+resource "aws_route_table_association" "kalifax_rta_subnet_public" {
   subnet_id      = aws_subnet.subnet_public.id
-  route_table_id = aws_route_table.levelup_rtb_public.id
+  route_table_id = aws_route_table.kalifax_rtb_public.id
 }
 
 # AWS Security group
-resource "aws_security_group" "levelup_sg_22" {
-  name = "levelup_sg_22"
-  vpc_id = aws_vpc.levelup_vpc.id
+resource "aws_security_group" "kalifax_sg_22" {
+  name = "kalifax_sg_22"
+  vpc_id = aws_vpc.kalifax_vpc.id
 
   # SSH access from the VPC
   ingress {
